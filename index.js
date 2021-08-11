@@ -52,15 +52,19 @@ async function main() {
       );
     let taskComment = null,
       targets = TARGETS ? JSON.parse(TARGETS) : [],
-      parseAsanaURL = null;
+      parseAsanaURL = REGEX.exec(PULL_REQUEST.body);
 
+    if (!parseAsanaURL) {
+      throw new Error("Asana task URL not found!");
+    }
     if (!ASANA_PAT) {
-      throw new Error("ASANA PAT Not Found!");
+      throw new Error("Asana PAT not found!");
     }
     if (TASK_COMMENT) {
       taskComment = `${TASK_COMMENT} ${PULL_REQUEST.html_url}`;
       core.info(taskComment);
     }
+    // Works for multiple links in PR description
     while ((parseAsanaURL = REGEX.exec(PULL_REQUEST.body)) !== null) {
       let taskId = parseAsanaURL.groups.task;
       if (taskId) {
