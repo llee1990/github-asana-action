@@ -1,0 +1,21 @@
+{
+  "name": "github-asana-fail-on-error",
+  "version": "1.0.0",
+  "description": "Action to integrate git with asana",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "github-actions",
+    "asana",
+    "git"
+  ],
+  "author": "Leon Lee",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/github": "^1.1.0",
+    "asana": "^0.17.3"
+  }
+}
