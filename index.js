@@ -39,36 +39,40 @@ async function asanaOperations(asanaPAT, targets, taskId, taskComment) {
   }
 }
 
-try {
-  const ASANA_PAT = core.getInput("asana-pat"),
-    TARGETS = core.getInput("targets"),
-    TRIGGER_PHRASE = core.getInput("trigger-phrase"),
-    TASK_COMMENT = core.getInput("task-comment"),
-    PULL_REQUEST = github.context.payload.pull_request,
-    REGEX = new RegExp(
-      `${TRIGGER_PHRASE} *\\[(.*?)\\]\\(https:\\/\\/app.asana.com\\/(\\d+)\\/(?<project>\\d+)\\/(?<task>\\d+).*?\\)`,
-      "g"
-    );
-  let taskComment = null,
-    targets = TARGETS ? JSON.parse(TARGETS) : [],
-    parseAsanaURL = null;
+async function main() {
+  try {
+    const ASANA_PAT = core.getInput("asana-pat"),
+      TARGETS = core.getInput("targets"),
+      TRIGGER_PHRASE = core.getInput("trigger-phrase"),
+      TASK_COMMENT = core.getInput("task-comment"),
+      PULL_REQUEST = github.context.payload.pull_request,
+      REGEX = new RegExp(
+        `${TRIGGER_PHRASE} *\\[(.*?)\\]\\(https:\\/\\/app.asana.com\\/(\\d+)\\/(?<project>\\d+)\\/(?<task>\\d+).*?\\)`,
+        "g"
+      );
+    let taskComment = null,
+      targets = TARGETS ? JSON.parse(TARGETS) : [],
+      parseAsanaURL = null;
 
-  if (!ASANA_PAT) {
-    throw new Error("ASANA PAT Not Found!");
-  }
-  if (TASK_COMMENT) {
-    taskComment = `${TASK_COMMENT} ${PULL_REQUEST.html_url}`;
-    core.info(taskComment);
-  }
-  while ((parseAsanaURL = REGEX.exec(PULL_REQUEST.body)) !== null) {
-    let taskId = parseAsanaURL.groups.task;
-    if (taskId) {
-      core.info(parseAsanaURL.toString());
-      await asanaOperations(ASANA_PAT, targets, taskId, taskComment);
-    } else {
-      throw new Error(`Invalid Asana task URL after the trigger phrase ${TRIGGER_PHRASE}`);
+    if (!ASANA_PAT) {
+      throw new Error("ASANA PAT Not Found!");
     }
+    if (TASK_COMMENT) {
+      taskComment = `${TASK_COMMENT} ${PULL_REQUEST.html_url}`;
+      core.info(taskComment);
+    }
+    while ((parseAsanaURL = REGEX.exec(PULL_REQUEST.body)) !== null) {
+      let taskId = parseAsanaURL.groups.task;
+      if (taskId) {
+        core.info(parseAsanaURL.toString());
+        await asanaOperations(ASANA_PAT, targets, taskId, taskComment);
+      } else {
+        throw new Error(`Invalid Asana task URL after the trigger phrase ${TRIGGER_PHRASE}`);
+      }
+    }
+  } catch (error) {
+    core.setFailed(error.message);
   }
-} catch (error) {
-  core.setFailed(error.message);
 }
+
+main();
