@@ -54,7 +54,7 @@ try {
     parseAsanaURL = null;
 
   if (!ASANA_PAT) {
-    throw { message: "ASANA PAT Not Found!" };
+    throw new Error("ASANA PAT Not Found!");
   }
   if (TASK_COMMENT) {
     taskComment = `${TASK_COMMENT} ${PULL_REQUEST.html_url}`;
@@ -66,7 +66,7 @@ try {
       core.info(parseAsanaURL.toString());
       await asanaOperations(ASANA_PAT, targets, taskId, taskComment);
     } else {
-      core.info(`Invalid Asana task URL after the trigger phrase ${TRIGGER_PHRASE}`);
+      throw new Error(`Invalid Asana task URL after the trigger phrase ${TRIGGER_PHRASE}`);
     }
   }
 } catch (error) {

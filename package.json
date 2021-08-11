@@ -1,5 +1,5 @@
 {
-  "name": "github-asana-fail-on-error",
+  "name": "github-asana-pr-integration",
   "version": "1.0.0",
   "description": "Action to integrate git with asana",
   "main": "index.js",

@@ -29,7 +29,7 @@ This action integrates asana with github. Any errors in this action will cause t
 targets: '[{"project": "Backlog", "section": "Development Done"}, {"project": "Current Sprint", "section": "In Review"}]'
 ```
 
-if you don't want to move task omit `targets`.
+if you don't want to move tasks omit `targets`.
 
 ## Sample PR Description
 
