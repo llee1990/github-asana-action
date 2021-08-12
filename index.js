@@ -65,6 +65,7 @@ async function main() {
       core.info(taskComment);
     }
     // Works for multiple links in PR description
+    REGEX.lastIndex = 0;
     while ((parseAsanaURL = REGEX.exec(PULL_REQUEST.body)) !== null) {
       let taskId = parseAsanaURL.groups.task;
       if (taskId) {
